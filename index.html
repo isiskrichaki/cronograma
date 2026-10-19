@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cripto Web App - Cifra de César</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header, section, .interactive-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        input, button, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .secondary {
+            background-color: #34495e;
+        }
+
+        .secondary:hover {
+            background-color: #22313f;
+        }
+
+        .result {
+            background: #e8f8f5;
+            padding: 15px;
+            border-left: 5px solid #2ecc71;
+            margin-top: 15px;
+            border-radius: 4px;
+            overflow-wrap: anywhere;
+        }
+
+        .result p {
+            margin-bottom: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .notice {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🔐 Cripto Web App</h1>
+        <p><strong>Projeto:</strong> Proteção de Informações</p>
+        <p>Introdução à criptografia utilizando a Cifra de César.</p>
+    </header>
+
+    <section>
+        <h2>O que é criptografia?</h2>
+
+        <p>
+            A criptografia é uma técnica utilizada para transformar
+            informações, dificultando sua leitura por pessoas não autorizadas.
+        </p>
+
+        <p>
+            Neste projeto, utilizamos a <strong>Cifra de César</strong>,
+            um método clássico que substitui cada letra por outra
+            três posições à frente no alfabeto.
+        </p>
+
+        <p>
+            Por exemplo: A vira D, B vira E e C vira F.
+            Quando chegamos ao final do alfabeto, voltamos ao início:
+            X vira A, Y vira B e Z vira C.
+        </p>
+    </section>
+
+    <div class="interactive-box">
+        <h2>Teste a criptografia</h2>
+
+        <p>Digite uma mensagem para criptografar ou descriptografar.</p>
+
+        <label for="inputText">Sua mensagem:</label>
+
+        <textarea
+            id="inputText"
+            placeholder="Digite sua mensagem aqui..."
+        ></textarea>
+
+        <button onclick="criptografar()">
+            🔒 Criptografar mensagem
+        </button>
+
+        <button class="secondary" onclick="descriptografar()">
+            🔓 Descriptografar mensagem
+        </button>
+
+        <div id="output" class="result hidden" aria-live="polite">
+            <p><strong>Resultado:</strong></p>
+            <p id="outputText"></p>
+            <button class="secondary" onclick="copiarResultado()">
+                Copiar resultado
+            </button>
+            <p id="copyStatus"></p>
+        </div>
+    </div>
+
+    <section>
+        <h2>Como funciona o código?</h2>
+
+        <ul>
+            <li>
+                <code>getElementById()</code> captura a mensagem digitada.
+            </li>
+            <li>
+                Um laço <code>for</code> percorre cada caractere do texto.
+            </li>
+            <li>
+                <code>charCodeAt()</code> converte o caractere em um código
+                numérico.
+            </li>
+            <li>
+                O cálculo matemático desloca a letra três posições no alfabeto.
+            </li>
+            <li>
+                <code>String.fromCharCode()</code> converte o código de volta
+                em caractere.
+            </li>
+            <li>
+                O resultado é apresentado diretamente na página.
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Exemplo de funcionamento</h2>
+
+        <p><strong>Mensagem original:</strong> ABC XYZ</p>
+        <p><strong>Mensagem criptografada:</strong> DEF ABC</p>
+        <p><strong>Mensagem descriptografada:</strong> ABC XYZ</p>
+    </section>
+
+    <section>
+        <h2>Objetivo educacional</h2>
+
+        <p>
+            Este projeto demonstra conceitos básicos de programação,
+            manipulação de textos, funções JavaScript e operações
+            matemáticas aplicadas à criptografia.
+        </p>
+
+        <p class="notice">
+            Atenção: a Cifra de César é um método didático e não deve
+            ser utilizada para proteger informações confidenciais.
+        </p>
+    </section>
+
+    <footer>
+        Projeto educacional - Cripto Web App
+    </footer>
+
+    <script>
+        function transformarTexto(texto, deslocamento) {
+            let resultado = "";
+
+            for (let i = 0; i < texto.length; i++) {
+                let codigo = texto.charCodeAt(i);
+
+                // Letras maiúsculas: A-Z
+                if (codigo >= 65 && codigo <= 90) {
+                    codigo = ((codigo - 65 + deslocamento + 26) % 26) + 65;
+                    resultado += String.fromCharCode(codigo);
+                }
+
+                // Letras minúsculas: a-z
+                else if (codigo >= 97 && codigo <= 122) {
+                    codigo = ((codigo - 97 + deslocamento + 26) % 26) + 97;
+                    resultado += String.fromCharCode(codigo);
+                }
+
+                // Mantém espaços, números e pontuação
+                else {
+                    resultado += texto[i];
+                }
+            }
+
+            return resultado;
+        }
+
+        function exibirResultado(resultado) {
+            document.getElementById("outputText").textContent = resultado;
+            document.getElementById("output").classList.remove("hidden");
+            document.getElementById("copyStatus").textContent = "";
+        }
+
+        function criptografar() {
+            const texto = document.getElementById("inputText").value;
+
+            if (texto.length === 0) {
+                alert("Digite uma mensagem primeiro!");
+                return;
+            }
+
+            exibirResultado(transformarTexto(texto, 3));
+        }
+
+        function descriptografar() {
+            const texto = document.getElementById("inputText").value;
+
+            if (texto.length === 0) {
+                alert("Digite uma mensagem primeiro!");
+                return;
+            }
+
+            exibirResultado(transformarTexto(texto, -3));
+        }
+
+        async function copiarResultado() {
+            const texto = document.getElementById("outputText").textContent;
+            const status = document.getElementById("copyStatus");
+
+            try {
+                await navigator.clipboard.writeText(texto);
+                status.textContent = "Resultado copiado!";
+            } catch (erro) {
+                status.textContent =
+                    "Não foi possível copiar automaticamente. Selecione e copie o resultado.";
+            }
+        }
+    </script>
+
+</body>
+</html>
